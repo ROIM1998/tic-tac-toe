@@ -2,40 +2,24 @@
 # the Tic-Tac-Toe game. This is where input and output happens.
 # For core game logic, see logic.py.
 
-from logic import Game, chr_to_int
+from logic import Game
 
 
 if __name__ == '__main__':
-    winner = None
-    now = 'O'
-    game = Game()
-    while winner == None:
-        # TODO: Show the board to the user.
-        print(game)
-        # TODO: Input a move from the player.
-        print("TODO: take a turn!")
-        position = input("Player %s please input the position you want to take, for example, \"a 0\"" % now)
-        row, col = position.split()
-        if row not in ['a', 'b', 'c']:
-            print("Wrong input! The index of rows should be 'a', 'b', or 'c'")
-            continue
-        if col not in ['0', '1', '2']:
-            print("Wrong input! The index of columns should be '0', '1', or '2'")
-            continue
-        # TODO: Update the board.
-        success = game.move(now, (chr_to_int[row], int(col)))
-        # TODO: Update who's turn it is.
-        if success:
-            now = game.other_player(now)
-        checked = game.get_winner()
-        if checked != 0:
-            winner = checked
-            print(game)
-            print("Player %s has won!!" % checked)
-        if game.check_draw():
-            print(game)
-            print("Draw!")
-            break
+    game_mode = None
+    while game_mode not in ['pvp', 'pve']:
+        game_mode = input('Choose game mode (pvp or pve): ')
+        if game_mode not in ['pvp', 'pve']:
+            print('Invalid game mode. Please try again.')
+    if game_mode == 'pvp':
+        start_first = True
+    else:
+        start_command = input('Do you want to start first? (y/n): ')
+        while start_command not in ['y', 'n']:
+            start_command = input('Invalid input. Please input "y" or "n": ')
+        start_first = start_command == 'y'
+    game = Game(game_mode=game_mode, start_first=start_first)
+    game.start()
         
         
         
