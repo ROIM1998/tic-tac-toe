@@ -7,11 +7,11 @@ from logic import Game
 
 if __name__ == '__main__':
     game_mode = None
-    while game_mode not in ['pvp', 'pve']:
-        game_mode = input('Choose game mode (pvp or pve): ')
-        if game_mode not in ['pvp', 'pve']:
+    while game_mode not in ['pvp', 'pve', 'eve']:
+        game_mode = input('Choose game mode (pvp, pve, or eve): ')
+        if game_mode not in ['pvp', 'pve', 'eve']:
             print('Invalid game mode. Please try again.')
-    if game_mode == 'pvp':
+    if game_mode == 'pvp' or game_mode == 'eve':
         start_first = True
     else:
         start_command = input('Do you want to start first? (y/n): ')

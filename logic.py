@@ -17,10 +17,14 @@ def make_empty_board():
 class Game:
     def __init__(self, game_mode='pvp', start_first=True):
         self.board = make_empty_board()
-        self.player_one = HumanPlayer(1)
         if game_mode == 'pvp':
+            self.player_one = HumanPlayer(1)
             self.player_two = HumanPlayer(2)
         elif game_mode == 'pve':
+            self.player_one = HumanPlayer(1)
+            self.player_two = MinimaxBot(2)
+        elif game_mode == 'eve':
+            self.player_one = MinimaxBot(1)
             self.player_two = MinimaxBot(2)
         if start_first:
             self.player_now = self.player_one
