@@ -2,6 +2,7 @@
 # or output happens here. The logic in this file
 # should be unit-testable.
 import os
+import time
 import numpy as np
 import pandas as pd
 from random import choice
@@ -35,6 +36,11 @@ class Game:
             self.player_now = self.player_one
         else:
             self.player_now = self.player_two
+        self.starter = self.player_now.name
+        self.name2player = {
+            self.player_one.name: self.player_one,
+            self.player_two.name: self.player_two,
+        }
         self.savegame: pd.DataFrame = self.read_savegame("savegame.csv")
 
     def read_savegame(self, filename):
@@ -45,6 +51,8 @@ class Game:
                 "game_id": [],
                 "winner": [],
                 "rounds": [],
+                "starter": [],
+                "players": [],
             })
 
     def check_winner(self, player, board):
@@ -104,11 +112,14 @@ class Game:
             "winner": winner,
             "rounds": rounds,
             "is_draw": is_draw,
+            "starter": self.starter,
+            "players": [self.player_one.name, self.player_two.name],
         }, ignore_index=True)
     
     def start(self):
         winner = None
         rounds = 0
+        last_time = time.time()
         while winner == None:
             rounds += 1
             # TODO: Show the board to the user.
@@ -119,6 +130,9 @@ class Game:
             success = self.move(self.player_now, (row, col))
             # TODO: Update who's turn it is.
             if success:
+                self.player_now.num_moves += 1
+                self.player_now.time_takes += time.time() - last_time
+                last_time = time.time()
                 self.player_now = self.other_player(self.player_now)
             checked = self.get_winner(self.board)
             if checked != 0:
@@ -146,16 +160,22 @@ class Game:
                 "wins": [],
                 "played": [],
                 "drawed": [],
+                "thinking_time": [],
+                "moves_take": [],
             }).set_index('player_name')
         winner_name = id_to_name[winner] if winner is not None else None
         for player_name in id_to_name.values():
             if player_name in df.index.tolist():
                 df.loc[player_name, 'played'] += 1
+                df.loc[player_name, 'thinking_time'] += self.name2player[player_name].time_takes
+                df.loc[player_name, 'moves_take'] += self.name2player[player_name].num_moves
             else:
                 df = df.append(pd.DataFrame({
                     "wins": [0],
                     "played": [1],
                     "drawed": [0],
+                    "thinking_time": [self.name2player[player_name].time_takes],
+                    "moves_take": [self.name2player[player_name].num_moves],
                 }, index=[player_name]))
         if winner_name is not None:
             df.loc[winner_name, 'wins'] += 1
@@ -172,6 +192,8 @@ class Player:
     def __init__(self, player_id, start_first):
         self.player_id = player_id
         self.start_first = start_first
+        self.num_moves = 0
+        self.time_takes = 0
     
     def get_available_moves(self, board: np.ndarray):
         indices = np.where(board == 0)
