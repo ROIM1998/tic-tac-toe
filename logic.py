@@ -248,6 +248,15 @@ class RandomBot(Player):
         available = self.get_available_moves(game.board)
         return choice(available)
     
+class SequentialBot(Player):
+    def __init__(self, player_id):
+        super().__init__(player_id)
+        self.name = "sequential_bot"
+        
+    def get_move(self, game: Game):
+        available = self.get_available_moves(game.board)
+        return available[0]
+    
     
 class MinimaxBot(Player):
     def __init__(self, player_id):
@@ -318,6 +327,7 @@ name2class = {
     "human": HumanPlayer,
     "random": RandomBot,
     "minimax": MinimaxBot,
+    "sequential": SequentialBot,
 }
     
     

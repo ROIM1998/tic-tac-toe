@@ -6,20 +6,15 @@ from logic import Game
 import argparse
 
 parser = argparse.ArgumentParser(description='Play Tic-Tac-Toe.')
-parser.add_argument('--player1', default='none', choices=['human', 'random', 'minimax'])
-parser.add_argument('--player2', default='none', choices=['human', 'random', 'minimax'])
+parser.add_argument('--player1', default='none', choices=['human', 'random', 'minimax', 'sequential'])
+parser.add_argument('--player2', default='none', choices=['human', 'random', 'minimax', 'sequential'])
 args = parser.parse_args()
-playertype2abbreviation = {
-    'human': 'p',
-    'random': 'r',
-    'minimax': 'e',
-}
 
 
 if __name__ == '__main__':
+    game_mode = None
     if args.player1 == 'none' or args.player2 == 'none':
         args = None
-        game_mode = None
         while game_mode not in ['pvp', 'pve', 'eve', 'evr']:
             game_mode = input('Choose game mode (pvp, pve, eve, or evr): ')
             if game_mode not in ['pvp', 'pve', 'eve', 'evr']:
@@ -33,7 +28,6 @@ if __name__ == '__main__':
             start_first = start_command == 'y'
     else:
         # When using args to specify players, the player1 always starts first.
-        game_mode = playertype2abbreviation[args.player1] + 'v' + playertype2abbreviation[args.player2]
         start_first = True
     game = Game(game_mode=game_mode, start_first=start_first, args=args)
     game.start()
