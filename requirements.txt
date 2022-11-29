@@ -1,0 +1,4 @@
+numpy==1.21.4
+pandas==1.3.4
+treelib==1.6.1
+matplotlib==3.4.3
