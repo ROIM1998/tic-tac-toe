@@ -18,20 +18,25 @@ def make_empty_board():
 
 
 class Game:
-    def __init__(self, game_mode='pvp', start_first=True):
+    def __init__(self, game_mode='pvp', start_first=True, args=None):
         self.board = make_empty_board()
-        if game_mode == 'pvp':
-            self.player_one = HumanPlayer(1)
-            self.player_two = HumanPlayer(2)
-        elif game_mode == 'pve':
-            self.player_one = HumanPlayer(1)
-            self.player_two = MinimaxBot(2)
-        elif game_mode == 'eve':
-            self.player_one = MinimaxBot(1)
-            self.player_two = MinimaxBot(2)
-        elif game_mode == 'evr':
-            self.player_one = MinimaxBot(1)
-            self.player_two = RandomBot(2)
+        if args is None:
+            if game_mode == 'pvp':
+                self.player_one = HumanPlayer(1)
+                self.player_two = HumanPlayer(2)
+            elif game_mode == 'pve':
+                self.player_one = HumanPlayer(1)
+                self.player_two = MinimaxBot(2)
+            elif game_mode == 'eve':
+                self.player_one = MinimaxBot(1)
+                self.player_two = MinimaxBot(2)
+            elif game_mode == 'evr':
+                self.player_one = MinimaxBot(1)
+                self.player_two = RandomBot(2)
+        else:
+            self.player_one = name2class[args.player1](1)
+            self.player_two = name2class[args.player2](2)
+            start_first = True
         if start_first:
             self.player_now = self.player_one
         else:
@@ -309,7 +314,11 @@ class MinimaxBot(Player):
                 move = children.data['move']
         return move
                 
-        
+name2class = {
+    "human": HumanPlayer,
+    "random": RandomBot,
+    "minimax": MinimaxBot,
+}
     
     
 if __name__ == '__main__':

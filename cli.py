@@ -18,6 +18,7 @@ playertype2abbreviation = {
 
 if __name__ == '__main__':
     if args.player1 == 'none' or args.player2 == 'none':
+        args = None
         game_mode = None
         while game_mode not in ['pvp', 'pve', 'eve', 'evr']:
             game_mode = input('Choose game mode (pvp, pve, eve, or evr): ')
@@ -31,9 +32,10 @@ if __name__ == '__main__':
                 start_command = input('Invalid input. Please input "y" or "n": ')
             start_first = start_command == 'y'
     else:
+        # When using args to specify players, the player1 always starts first.
         game_mode = playertype2abbreviation[args.player1] + 'v' + playertype2abbreviation[args.player2]
         start_first = True
-    game = Game(game_mode=game_mode, start_first=start_first)
+    game = Game(game_mode=game_mode, start_first=start_first, args=args)
     game.start()
         
         
