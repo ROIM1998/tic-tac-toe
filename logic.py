@@ -1,13 +1,15 @@
 # This file is where game logic lives. No input
 # or output happens here. The logic in this file
 # should be unit-testable.
+import os
 import numpy as np
+import pandas as pd
 from random import choice
 from treelib import Tree, Node
 
 cond_to_chr = {0: ' ', 1: 'O', 2: 'X'}
 chr_to_int = {'a': 0, 'b': 1, 'c': 2}
-int_to_role = {1: 'O', 2: 'X'}
+id_to_name = {1: 'O', 2: 'X'}
 role_to_int = {'O': 1, 'X': 2, None: 0}
 
 def make_empty_board():
@@ -30,6 +32,17 @@ class Game:
             self.player_now = self.player_one
         else:
             self.player_now = self.player_two
+        self.savegame = self.read_savegame("savegame.csv")
+
+    def read_savegame(self, filename):
+        if os.path.exists(filename):
+            return pd.read_csv(filename)
+        else:
+            return pd.DataFrame({
+                "game_id": [],
+                "winner": [],
+                "rounds": [],
+            })
 
     def check_winner(self, player, board):
         checks = []
@@ -97,11 +110,15 @@ class Game:
             if checked != 0:
                 winner = checked
                 print(self)
-                print("Player %s has won!!" % int_to_role[checked])
+                print("Player %s has won!!" % id_to_name[checked])
             if self.check_draw(self.board):
                 print(self)
                 print("Draw!")
                 break
+        self.save_game("savegame.csv")
+    
+    def save_game(self, filename):
+        self.savegame.to_csv(filename, index=False)
     
 
 
@@ -122,6 +139,8 @@ class Player:
 class HumanPlayer(Player):
     def __init__(self, player_id):
         super().__init__(player_id)
+        self.name = input("Please input your name:")
+        id_to_name[self.player_id] = self.name
     
     def get_move(self, game):
         try:
@@ -143,6 +162,7 @@ class HumanPlayer(Player):
 class RandomBot(Player):
     def __init__(self, player_id):
         super().__init__(player_id)
+        self.name = "random_bot"
         
     def get_move(self, game: Game):
         available = self.get_available_moves(game.board)
@@ -152,6 +172,7 @@ class RandomBot(Player):
 class MinimaxBot(Player):
     def __init__(self, player_id):
         super().__init__(player_id)
+        self.name = "minimax_bot"
         
     def get_move(self, game: Game):
         if (game.board == 0).all():
