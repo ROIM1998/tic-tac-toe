@@ -21,25 +21,34 @@ class Game:
     def __init__(self, game_mode='pvp', start_first=True):
         self.board = make_empty_board()
         if game_mode == 'pvp':
-            self.player_one = HumanPlayer(1, start_first)
-            self.player_two = HumanPlayer(2, start_first)
+            self.player_one = HumanPlayer(1)
+            self.player_two = HumanPlayer(2)
         elif game_mode == 'pve':
-            self.player_one = HumanPlayer(1, start_first)
-            self.player_two = MinimaxBot(2, not start_first)
+            self.player_one = HumanPlayer(1)
+            self.player_two = MinimaxBot(2)
         elif game_mode == 'eve':
-            self.player_one = MinimaxBot(1, start_first)
-            self.player_two = MinimaxBot(2, not start_first)
+            self.player_one = MinimaxBot(1)
+            self.player_two = MinimaxBot(2)
         elif game_mode == 'evr':
-            self.player_one = MinimaxBot(1, start_first)
-            self.player_two = RandomBot(2, not start_first)
+            self.player_one = MinimaxBot(1)
+            self.player_two = RandomBot(2)
         if start_first:
             self.player_now = self.player_one
         else:
             self.player_now = self.player_two
+        if not isinstance(self.player_now, HumanPlayer):
+            self.player_now.name += '_first'
+        if not isinstance(self.other_player(self.player_now), HumanPlayer):
+            self.other_player(self.player_now).name += '_second'
         self.starter = self.player_now.name
         self.name2player = {
             self.player_one.name: self.player_one,
             self.player_two.name: self.player_two,
+        }
+        global id_to_name
+        id_to_name = {
+            self.player_one.player_id: self.player_one.name,
+            self.player_two.player_id: self.player_two.name,
         }
         self.savegame: pd.DataFrame = self.read_savegame("savegame.csv")
 
@@ -189,9 +198,8 @@ class Game:
 
 
 class Player:
-    def __init__(self, player_id, start_first):
+    def __init__(self, player_id):
         self.player_id = player_id
-        self.start_first = start_first
         self.num_moves = 0
         self.time_takes = 0
     
@@ -205,10 +213,9 @@ class Player:
     
 
 class HumanPlayer(Player):
-    def __init__(self, player_id, start_first):
-        super().__init__(player_id, start_first)
+    def __init__(self, player_id):
+        super().__init__(player_id)
         self.name = input("Please input your name:")
-        id_to_name[self.player_id] = self.name
     
     def get_move(self, game):
         try:
@@ -228,14 +235,9 @@ class HumanPlayer(Player):
 
 
 class RandomBot(Player):
-    def __init__(self, player_id, start_first):
-        super().__init__(player_id, start_first)
+    def __init__(self, player_id):
+        super().__init__(player_id)
         self.name = "random_bot"
-        if self.start_first:
-            self.name += '_first'
-        else:
-            self.name += '_second'
-        id_to_name[self.player_id] = self.name
         
     def get_move(self, game: Game):
         available = self.get_available_moves(game.board)
@@ -243,14 +245,9 @@ class RandomBot(Player):
     
     
 class MinimaxBot(Player):
-    def __init__(self, player_id, start_first):
-        super().__init__(player_id, start_first)
+    def __init__(self, player_id):
+        super().__init__(player_id)
         self.name = "minimax_bot"
-        if self.start_first:
-            self.name += '_first'
-        else:
-            self.name += '_second'
-        id_to_name[self.player_id] = self.name
         
     def get_move(self, game: Game):
         if (game.board == 0).all():
