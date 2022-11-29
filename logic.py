@@ -20,19 +20,22 @@ class Game:
     def __init__(self, game_mode='pvp', start_first=True):
         self.board = make_empty_board()
         if game_mode == 'pvp':
-            self.player_one = HumanPlayer(1)
-            self.player_two = HumanPlayer(2)
+            self.player_one = HumanPlayer(1, start_first)
+            self.player_two = HumanPlayer(2, start_first)
         elif game_mode == 'pve':
-            self.player_one = HumanPlayer(1)
-            self.player_two = MinimaxBot(2)
+            self.player_one = HumanPlayer(1, start_first)
+            self.player_two = MinimaxBot(2, not start_first)
         elif game_mode == 'eve':
-            self.player_one = MinimaxBot(1)
-            self.player_two = MinimaxBot(2)
+            self.player_one = MinimaxBot(1, start_first)
+            self.player_two = MinimaxBot(2, not start_first)
+        elif game_mode == 'evr':
+            self.player_one = MinimaxBot(1, start_first)
+            self.player_two = RandomBot(2, not start_first)
         if start_first:
             self.player_now = self.player_one
         else:
             self.player_now = self.player_two
-        self.savegame = self.read_savegame("savegame.csv")
+        self.savegame: pd.DataFrame = self.read_savegame("savegame.csv")
 
     def read_savegame(self, filename):
         if os.path.exists(filename):
@@ -94,9 +97,20 @@ class Game:
         return header + separator.join(row_strings)
     
     
+    def add_savegame(self, winner, rounds, is_draw):
+        game_id = max(self.savegame.game_id) + 1 if len(self.savegame) > 0 else 0
+        self.savegame = self.savegame.append({
+            "game_id": game_id,
+            "winner": winner,
+            "rounds": rounds,
+            "is_draw": is_draw,
+        }, ignore_index=True)
+    
     def start(self):
         winner = None
+        rounds = 0
         while winner == None:
+            rounds += 1
             # TODO: Show the board to the user.
             print(self)
             # TODO: Input a move from the player.
@@ -111,21 +125,53 @@ class Game:
                 winner = checked
                 print(self)
                 print("Player %s has won!!" % id_to_name[checked])
+                self.add_savegame(id_to_name[checked], rounds, False)
             if self.check_draw(self.board):
                 print(self)
                 print("Draw!")
+                self.add_savegame(None, rounds, True)
                 break
         self.save_game("savegame.csv")
+        self.update_statistics(winner)
     
     def save_game(self, filename):
         self.savegame.to_csv(filename, index=False)
+        
+    def update_statistics(self, winner, filename="statistics.csv"):
+        if os.path.exists(filename):
+            df = pd.read_csv(filename, index_col=0)
+        else:
+            df = pd.DataFrame({
+                "player_name": [],
+                "wins": [],
+                "played": [],
+                "drawed": [],
+            }).set_index('player_name')
+        winner_name = id_to_name[winner] if winner is not None else None
+        for player_name in id_to_name.values():
+            if player_name in df.index.tolist():
+                df.loc[player_name, 'played'] += 1
+            else:
+                df = df.append(pd.DataFrame({
+                    "wins": [0],
+                    "played": [1],
+                    "drawed": [0],
+                }, index=[player_name]))
+        if winner_name is not None:
+            df.loc[winner_name, 'wins'] += 1
+        else:
+            for player_name in id_to_name.values():
+                df.loc[player_name, 'drawed'] += 1
+        df.to_csv(filename)
+        print("Leaderboard:")
+        print(df)
     
 
 
 class Player:
-    def __init__(self, player_id):
+    def __init__(self, player_id, start_first):
         self.player_id = player_id
-    
+        self.start_first = start_first
     
     def get_available_moves(self, board: np.ndarray):
         indices = np.where(board == 0)
@@ -137,8 +183,8 @@ class Player:
     
 
 class HumanPlayer(Player):
-    def __init__(self, player_id):
-        super().__init__(player_id)
+    def __init__(self, player_id, start_first):
+        super().__init__(player_id, start_first)
         self.name = input("Please input your name:")
         id_to_name[self.player_id] = self.name
     
@@ -160,9 +206,14 @@ class HumanPlayer(Player):
 
 
 class RandomBot(Player):
-    def __init__(self, player_id):
-        super().__init__(player_id)
+    def __init__(self, player_id, start_first):
+        super().__init__(player_id, start_first)
         self.name = "random_bot"
+        if self.start_first:
+            self.name += '_first'
+        else:
+            self.name += '_second'
+        id_to_name[self.player_id] = self.name
         
     def get_move(self, game: Game):
         available = self.get_available_moves(game.board)
@@ -170,9 +221,14 @@ class RandomBot(Player):
     
     
 class MinimaxBot(Player):
-    def __init__(self, player_id):
-        super().__init__(player_id)
+    def __init__(self, player_id, start_first):
+        super().__init__(player_id, start_first)
         self.name = "minimax_bot"
+        if self.start_first:
+            self.name += '_first'
+        else:
+            self.name += '_second'
+        id_to_name[self.player_id] = self.name
         
     def get_move(self, game: Game):
         if (game.board == 0).all():
