@@ -1,0 +1,43 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.board{
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    padding: 10px;
+    position: relative;
+    width: 40em;
+    height: 40em;
+}
+
+.board tr{
+    font-size: 10em;
+    align-items: center;
+    justify-content: center;
+}
+
+.board td{
+    border: 1px solid;
+    text-align: center;
+}
+
+.leaderboard{
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    padding: 10px;
+    position: relative;
+    width: 20em;
+    height: 40em;
+}
+
+.leaderboard td{
+    border: 1px solid;
+}
