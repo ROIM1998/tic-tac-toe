@@ -1,6 +1,6 @@
 body{
-    background-image: url("img/BG.png");
     font-family: Arial, Helvetica, sans-serif;
+    color: white
 }
 
 .index-container{
@@ -73,14 +73,14 @@ body{
 }
 
 .board{
-    background-color: #f5f5f5;
-    border: 1px solid #ccc;
     border-radius: 3px;
     box-shadow: 0 1px 1px rgba(0,0,0,.05);
-    padding: 10px;
+    padding: 20px;
     position: relative;
     width: 40em;
     height: 40em;
+    table-layout: fixed;
+    border-spacing: 10px;
 }
 
 .board tr{
@@ -90,8 +90,50 @@ body{
 }
 
 .board td{
-    border: 1px solid;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
     text-align: center;
+    width: 250px;
+    height: 250px;
+    vertical-align: middle;
+}
+
+.cell{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.play-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 50px;
+}
+
+.player-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 50px;
+    width: 30%;
+}
+
+
+.vertical-player{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    font-size: 3em;
+    gap: 10px;
+}
+
+.vertical-player img{
+    width: 100%;
 }
 
 .leaderboard{
