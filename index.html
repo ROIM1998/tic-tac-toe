@@ -8,24 +8,32 @@
     <title>Tic-Tac-Toe Home page</title>
 </head>
 <body>
-    <div class="container">
-        <h1>
-            Tic-Tac-Toe!
-        </h1>
-        <form action="play.html">
-            <label for="playmode">Choose a playmode:</label>
+    <div class="index-container">
+        <img src="img/Welcome to Tic Tac.png" alt="">
+        <form action="play.html" class="index-form">
             <br>
-                <select name="playmode" id="playmode" form="carform">
-                <option value="pvp">pvp</option>
-                <option value="pve">pve</option>
-                <option value="eve">eve</option>
-            </select>
+            <div class="gamemode">
+                <label for="playmode" class="gamemode-label">Game mode:</label>
+                <br>
+                    <select name="playmode" id="playmode" form="carform">
+                    <option value="pvp">PVP</option>
+                    <option value="pve">PVE</option>
+                    <option value="eve">EVE</option>
+                </select>
+            </div>
             <br>
-            <input type="text" name="name" placeholder="Enter your name">
+            <div class="player">
+                <span class="player-label">Player 1</span>
+                <img src="img/image1.png" alt="">
+                <input type="text" name="name" placeholder="Enter your name">
+            </div>
+            <div class="player">
+                <span class="player-label">Player 2</span>
+                <img src="img/image2.png" alt="">
+                <input type="text" name="name" placeholder="Enter your name">
+            </div>
             <br>
-            <input type="text" name="name" placeholder="Enter your name">
-            <br>
-            <input type="submit" value="Submit">
+            <input type="submit" value="GO" class="submit">
         </form>
     </div>
 
