@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
     <style>
         body{
-            background-image: url("static/img/BG-play.png");
+            background-image: url("/static/img/BG-play.png");
         }
     </style>
     <title>Tic-Tac-Toe play!</title>
@@ -18,13 +18,13 @@
         <div class="play-container">
             <div class="player-container">
                 <div class="vertical-player">
-                    <img src="static/img/image1.png" alt="">
-                    <span class="playername"> Bowen </span>
+                    <img src="/static/img/image1.png" alt="">
+                    <span class="playername"> {{ player1 }} </span>
                 </div>
-                <img src="static/img/VS.png" alt="">
+                <img src="/static/img/VS.png" alt="">
                 <div class="vertical-player">
-                    <img src="static/img/image2.png" alt="">
-                    <span class="playername"> ROIM </span>
+                    <img src="/static/img/image2.png" alt="">
+                    <span class="playername"> {{ player2}} </span>
                 </div>
             </div>
             <br>
@@ -32,12 +32,12 @@
                 <tr>
                     <td><div class="cell"></div></td>
                     <td><div class="cell"></div></td>
-                    <td><div class="cell"><img src="static/img/X.png" alt=""></div></td>
+                    <td><div class="cell"><img src="/static/img/X.png" alt=""></div></td>
                 </tr>
                 <tr>
                     <td><div class="cell"></div></td>
-                    <td><div class="cell"><img src="static/img/X.png" alt=""></div></td>
-                    <td><div class="cell"><img src="static/img/O.png" alt=""></div></td>
+                    <td><div class="cell"><img src="/static/img/X.png" alt=""></div></td>
+                    <td><div class="cell"><img src="/static/img/O.png" alt=""></div></td>
                 </tr>    
                 <tr>
                     <td><div class="cell"></div></td>
