@@ -18,6 +18,7 @@ body{
     justify-content: center;
     align-items: center;
     gap: 20px;
+    width: 80%;
 }
 
 
@@ -34,6 +35,10 @@ body{
     align-items: center;
     color: white;
     gap: 20px;
+}
+
+.index-form .player img{
+    width: 15%;
 }
 
 .player-label{
