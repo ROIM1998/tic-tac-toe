@@ -20,7 +20,7 @@
             <div class="gamemode">
                 <label for="playmode" class="gamemode-label">Game mode:</label>
                 <br>
-                    <select name="playmode" id="playmode" form="carform">
+                    <select name="playmode" id="playmode">
                     <option value="pvp">PVP</option>
                     <option value="pve">PVE</option>
                     <option value="eve">EVE</option>
@@ -30,12 +30,22 @@
             <div class="player">
                 <span class="player-label">Player 1</span>
                 <img src="static/img/image1.png" alt="">
-                <input type="text" name="name" placeholder="Enter your name">
+                <input type="text" name="player1" placeholder="Enter your name">
+                <select name="botmode1" id="botmode1">
+                    <option value="Random">Random</option>
+                    <option value="Sequential">Sequential</option>
+                    <option value="Minimax">Minimax</option>
+                </select>
             </div>
             <div class="player">
                 <span class="player-label">Player 2</span>
                 <img src="static/img/image2.png" alt="">
-                <input type="text" name="name" placeholder="Enter your name">
+                <input type="text" name="player2" placeholder="Enter your name">
+                <select name="botmode2" id="botmode2">
+                    <option value="Random">Random</option>
+                    <option value="Sequential">Sequential</option>
+                    <option value="Minimax">Minimax</option>
+                </select>
             </div>
             <br>
             <input type="submit" value="GO" class="submit">
