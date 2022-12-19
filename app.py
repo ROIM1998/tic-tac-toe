@@ -124,10 +124,10 @@ def stats():
     stats = pd.read_csv("statistics.csv", index_col=0)
     stats['timepermove'] = stats['thinking_time'] / stats['moves_take']
     stats.sort_values(by=['wins'], ascending=False, inplace=True)
-    names = stats.index.tolist()[:10]
-    games = [int(v) for v in stats['played'].tolist()[:10]]
-    wins =  [int(v) for v in stats['wins'].tolist()[:10]]
-    timepermove = ["%.5f" % v for v in stats['timepermove'].tolist()[:10]]
+    names = stats.index.tolist()[:8]
+    games = [int(v) for v in stats['played'].tolist()[:8]]
+    wins =  [int(v) for v in stats['wins'].tolist()[:8]]
+    timepermove = ["%.5f" % v for v in stats['timepermove'].tolist()[:8]]
     return render_template('stats.html', len=len(names), names=names, games=games, wins=wins, timepermove=timepermove)
 
 
