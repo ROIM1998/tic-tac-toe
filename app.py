@@ -17,11 +17,12 @@ def index():
 def play():
     print("Initializing game...")
     global game, last_time
-    game = Game(game_mode=request.args.get('playmode'), start_first=True)
     last_time = time.time()
     if request.args.get('playmode') == 'pvp':
+        game = Game(game_mode=request.args.get('playmode'), start_first=True, player_names=[request.args.get('player1'), request.args.get('player2')])
         return render_template('play.html', player1=request.args.get('player1'), player2=request.args.get('player2'))
     elif request.args.get('playmode') == 'pve':
+        game = Game(game_mode=request.args.get('playmode'), start_first=True, player_names=[request.args.get('player1')])
         return render_template('play.html', player1=request.args.get('player1'), player2=request.args.get('botmode2') + 'Bot')
     elif request.args.get('playmode') == 'eve':
         return render_template('play.html', player1=request.args.get('botmode1') + 'Bot', player2=request.args.get('botmode2') + 'Bot')

@@ -18,14 +18,14 @@ def make_empty_board():
 
 
 class Game:
-    def __init__(self, game_mode='pvp', start_first=True, args=None):
+    def __init__(self, game_mode='pvp', start_first=True, args=None, player_names=None):
         self.board = make_empty_board()
         if args is None:
             if game_mode == 'pvp':
-                self.player_one = HumanPlayer(1)
-                self.player_two = HumanPlayer(2)
+                self.player_one = HumanPlayer(1, player_name=player_names[0] if player_names is not None else None)
+                self.player_two = HumanPlayer(2, player_name=player_names[1] if player_names is not None else None)
             elif game_mode == 'pve':
-                self.player_one = HumanPlayer(1)
+                self.player_one = HumanPlayer(1, player_name=player_names[0] if player_names is not None else None)
                 self.player_two = MinimaxBot(2)
             elif game_mode == 'eve':
                 self.player_one = MinimaxBot(1)
@@ -213,16 +213,19 @@ class Player:
         available = [(i, j) for i, j in zip(indices[0], indices[1])]
         return available
 
-    def get_move(self, game):
+    def get_move(self):
         pass
     
 
 class HumanPlayer(Player):
-    def __init__(self, player_id):
+    def __init__(self, player_id, player_name=None):
         super().__init__(player_id)
-        self.name = input("Please input your name:")
+        if player_name is None:
+            self.name = input("Please input your name:")
+        else:
+            self.name = player_name
     
-    def get_move(self, game):
+    def get_move(self):
         try:
             position = input("Player %s please input the position you want to take, for example, \"a 0\"" % self.player_id)
             row, col = position.split()

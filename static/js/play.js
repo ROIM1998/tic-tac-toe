@@ -1,6 +1,6 @@
+var now_char = 'X';
 
-
-function query_move(row, col) {
+function query_move(row, col, target) {
     console.log("query_move");
     console.log(row);
     console.log(col);
@@ -16,6 +16,14 @@ function query_move(row, col) {
         success: function (data) {
             console.log("success");
             console.log(data);
+            if(data['success']){
+                if(data['gameover']){
+                    alert("Game Over");
+                }else{
+                    target.querySelector('img').src = '/static/img/'+ now_char +'.png';
+                    now_char = now_char == 'X' ? 'O' : 'X';
+                }
+            }
         },
         error: function (data) {
             console.log("error");
@@ -34,7 +42,7 @@ document.querySelectorAll(".cell").forEach(item => {
         cell_id_int = parseInt(match[1]);
         row = Math.floor(cell_id_int / 3);
         col = cell_id_int % 3;
-        query_move(row, col);
+        query_move(row, col, event.target);
     })
 })
 
