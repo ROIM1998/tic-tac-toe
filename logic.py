@@ -18,15 +18,20 @@ def make_empty_board():
 
 
 class Game:
-    def __init__(self, game_mode='pvp', start_first=True, args=None, player_names=None):
+    def __init__(self, game_mode='pvp', bot_type='Minimax', start_first=True, args=None, player_names=None):
         self.board = make_empty_board()
+        self.game_mode = game_mode
         if args is None:
             if game_mode == 'pvp':
                 self.player_one = HumanPlayer(1, player_name=player_names[0] if player_names is not None else None)
                 self.player_two = HumanPlayer(2, player_name=player_names[1] if player_names is not None else None)
             elif game_mode == 'pve':
                 self.player_one = HumanPlayer(1, player_name=player_names[0] if player_names is not None else None)
-                self.player_two = MinimaxBot(2)
+                bot_type = bot_type.lower()
+                if bot_type in name2class:
+                    self.player_two = name2class[bot_type](2)
+                else:
+                    self.player_two = None
             elif game_mode == 'eve':
                 self.player_one = MinimaxBot(1)
                 self.player_two = MinimaxBot(2)

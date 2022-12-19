@@ -4,6 +4,11 @@ function query_move(row, col, target) {
     console.log("query_move");
     console.log(row);
     console.log(col);
+    if (target.querySelector('img').src.includes("X.png") || target.querySelector('img').src.includes("O.png")){
+        alert("This cell is already occupied! Try another one.");
+        return;
+    }
+    target.querySelector('img').src = '/static/img/'+ now_char +'.png';
     $.ajax({
         url: '/tic-tac-toe/move',
         type: 'POST',
@@ -20,8 +25,15 @@ function query_move(row, col, target) {
                 if(data['gameover']){
                     alert("Game Over");
                 }else{
-                    target.querySelector('img').src = '/static/img/'+ now_char +'.png';
                     now_char = now_char == 'X' ? 'O' : 'X';
+                    if(data['with_bot']){
+                        row = parseInt(data['bot_move'][0]);
+                        col = parseInt(data['bot_move'][1]);
+                        cell_id = 'cell-' + (row * 3 + col);
+                        bot_target = document.getElementById(cell_id);
+                        bot_target.querySelector('img').src = '/static/img/'+ now_char +'.png';
+                        now_char = now_char == 'X' ? 'O' : 'X';
+                    }
                 }
             }
         },
