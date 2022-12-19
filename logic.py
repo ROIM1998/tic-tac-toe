@@ -10,7 +10,6 @@ from treelib import Tree, Node
 
 cond_to_chr = {0: ' ', 1: 'O', 2: 'X'}
 chr_to_int = {'a': 0, 'b': 1, 'c': 2}
-id_to_name = {1: 'O', 2: 'X'}
 role_to_int = {'O': 1, 'X': 2, None: 0}
 
 def make_empty_board():
@@ -21,6 +20,7 @@ class Game:
     def __init__(self, game_mode='pvp', bot_type='Minimax', start_first=True, args=None, player_names=None):
         self.board = make_empty_board()
         self.game_mode = game_mode
+        self.id_to_name = {1: 'O', 2: 'X'}
         if args is None:
             if game_mode == 'pvp':
                 self.player_one = HumanPlayer(1, player_name=player_names[0] if player_names is not None else None)
@@ -55,12 +55,12 @@ class Game:
             self.player_one.name: self.player_one,
             self.player_two.name: self.player_two,
         }
-        global id_to_name
-        id_to_name = {
+        self.id_to_name = {
             self.player_one.player_id: self.player_one.name,
             self.player_two.player_id: self.player_two.name,
         }
         self.savegame: pd.DataFrame = self.read_savegame("savegame.csv")
+        print(self.id_to_name)
 
     def read_savegame(self, filename):
         if os.path.exists(filename):
@@ -157,8 +157,8 @@ class Game:
             if checked != 0:
                 winner = checked
                 print(self)
-                print("Player %s has won!!" % id_to_name[checked])
-                self.add_savegame(id_to_name[checked], rounds, False)
+                print("Player %s has won!!" % self.id_to_name[checked])
+                self.add_savegame(self.id_to_name[checked], rounds, False)
             if self.check_draw(self.board):
                 print(self)
                 print("Draw!")
@@ -182,8 +182,8 @@ class Game:
                 "thinking_time": [],
                 "moves_take": [],
             }).set_index('player_name')
-        winner_name = id_to_name[winner] if winner is not None else None
-        for player_name in id_to_name.values():
+        winner_name = self.id_to_name[winner] if winner is not None else None
+        for player_name in self.id_to_name.values():
             if player_name in df.index.tolist():
                 df.loc[player_name, 'played'] += 1
                 df.loc[player_name, 'thinking_time'] += self.name2player[player_name].time_takes
@@ -199,7 +199,7 @@ class Game:
         if winner_name is not None:
             df.loc[winner_name, 'wins'] += 1
         else:
-            for player_name in id_to_name.values():
+            for player_name in self.id_to_name.values():
                 df.loc[player_name, 'drawed'] += 1
         df.to_csv(filename)
         df.sort_values(by=['wins', 'drawed'], ascending=False, inplace=True)

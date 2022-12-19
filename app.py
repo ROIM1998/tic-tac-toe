@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import render_template, jsonify
 from flask import request
-from logic import Game, id_to_name
+from logic import Game
 import time
 import pandas as pd
 
@@ -49,15 +49,16 @@ def get_move():
     global rounds
     rounds += 1
     checked = game.get_winner(game.board)
+    winner = None
     if checked != 0:
         winner = checked
-        game.add_savegame(id_to_name[checked], rounds, False)
+        game.add_savegame(game.id_to_name[checked], rounds, False)
         game.save_game("savegame.csv")
         game.update_statistics(winner)
         return jsonify({
             'success': success,
             'gameover': True,
-            'winner': winner,
+            'winner': game.id_to_name[winner],
         })
     elif game.check_draw(game.board):
         game.add_savegame(None, rounds, True)
@@ -81,13 +82,13 @@ def get_move():
             checked = game.get_winner(game.board)
             if checked != 0:
                 winner = checked
-                game.add_savegame(id_to_name[checked], rounds, False)
+                game.add_savegame(game.id_to_name[checked], rounds, False)
                 game.save_game("savegame.csv")
                 game.update_statistics(winner)
                 return jsonify({
                     'success': success,
                     'gameover': True,
-                    'winner': winner,
+                    'winner': game.id_to_name[winner],
                     'with_bot': True,
                     'bot_move': [str(row), str(col)],
                 })

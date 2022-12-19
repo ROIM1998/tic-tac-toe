@@ -28,14 +28,28 @@ function query_move(row, col, target) {
             console.log(data);
             if(data['success']){
                 if(data['gameover']){
-                    Swal.fire({
-                        title: 'Game Over!',
-                        icon: 'info',
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location = '/tic-tac-toe/statistics'
-                        }
-                    })
+                    if(data['winner'] == null){
+                        Swal.fire({
+                            title: 'Game Over!',
+                            icon: 'info',
+                            text: 'The game is a draw!',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location = '/tic-tac-toe/statistics'
+                            }
+                        })
+                    }else{
+                        Swal.fire({
+                            title: 'Game Over!',
+                            icon: 'info',
+                            text: 'Player ' + data['winner'] + ' has won!',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location = '/tic-tac-toe/statistics'
+                            }
+                        })
+                    }
+
                 }else{
                     now_char = now_char == 'X' ? 'O' : 'X';
                     if(data['with_bot']){
