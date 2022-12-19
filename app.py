@@ -3,6 +3,7 @@ from flask import render_template, jsonify
 from flask import request
 from logic import Game, id_to_name
 import time
+import pandas as pd
 
 app = Flask(__name__)
 game = None
@@ -116,5 +117,18 @@ def get_move():
                 'winner': None,
                 'with_bot': False,
             })
+            
+@app.route("/tic-tac-toe/statistics")
+def stats():
+    stats = pd.read_csv("statistics.csv", index_col=0)
+    stats['timepermove'] = stats['thinking_time'] / stats['moves_take']
+    stats.sort_values(by=['wins'], ascending=False, inplace=True)
+    names = stats.index.tolist()[:10]
+    games = [int(v) for v in stats['played'].tolist()[:10]]
+    wins =  [int(v) for v in stats['wins'].tolist()[:10]]
+    timepermove = ["%.5f" % v for v in stats['timepermove'].tolist()[:10]]
+    return render_template('stats.html', len=len(names), names=names, games=games, wins=wins, timepermove=timepermove)
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=4000)

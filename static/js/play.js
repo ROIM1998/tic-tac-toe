@@ -4,8 +4,13 @@ function query_move(row, col, target) {
     console.log("query_move");
     console.log(row);
     console.log(col);
+    console.log(target);
     if (target.querySelector('img').src.includes("X.png") || target.querySelector('img').src.includes("O.png")){
-        alert("This cell is already occupied! Try another one.");
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'This cell is already occupied! Try another one.',
+        })
         return;
     }
     target.querySelector('img').src = '/static/img/'+ now_char +'.png';
@@ -23,7 +28,14 @@ function query_move(row, col, target) {
             console.log(data);
             if(data['success']){
                 if(data['gameover']){
-                    alert("Game Over");
+                    Swal.fire({
+                        title: 'Game Over!',
+                        icon: 'info',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location = '/tic-tac-toe/statistics'
+                        }
+                    })
                 }else{
                     now_char = now_char == 'X' ? 'O' : 'X';
                     if(data['with_bot']){
@@ -51,6 +63,14 @@ document.querySelectorAll(".cell").forEach(item => {
         console.log(cell_id);
         const re = new RegExp('cell-(\\d+)');
         const match = re.exec(cell_id);
+        if(match == null){
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'This cell is already occupied! Try another one.',
+            })
+            return;
+        }
         cell_id_int = parseInt(match[1]);
         row = Math.floor(cell_id_int / 3);
         col = cell_id_int % 3;

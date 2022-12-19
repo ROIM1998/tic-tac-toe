@@ -202,6 +202,7 @@ class Game:
             for player_name in id_to_name.values():
                 df.loc[player_name, 'drawed'] += 1
         df.to_csv(filename)
+        df.sort_values(by=['wins', 'drawed'], ascending=False, inplace=True)
         print("Leaderboard:")
         print(df)
     
@@ -230,7 +231,7 @@ class HumanPlayer(Player):
         else:
             self.name = player_name
     
-    def get_move(self):
+    def get_move(self, game=None):
         try:
             position = input("Player %s please input the position you want to take, for example, \"a 0\"" % self.player_id)
             row, col = position.split()

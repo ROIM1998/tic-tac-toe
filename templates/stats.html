@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
     <style>
         body{
-            background-image: url("static/img/BG.png");
+            background-image: url("/static/img/BG.png");
         }
     </style>
     <title>Tic-Tac-Toe leaderboard</title>
@@ -23,60 +23,15 @@
                 <th>Wins</th>
                 <th>Time per Move</th>
             </tr>
+            {%for i in range(0, len)%}
+            <!-- table rows -->
             <tr>
-                <td>Bowen</td>
-                <td>10</td>
-                <td>3</td>
-                <td>5.3s</td>
+                <td>{{names[i]}}</td>
+                <td>{{games[i]}}</td>
+                <td>{{wins[i]}}</td>
+                <td>{{timepermove[i]}}</td>
             </tr>
-            <tr>
-                <td>ROIM</td>
-                <td>7</td>
-                <td>4</td>
-                <td>4.5s</td>
-            </tr>    
-            <tr>
-                <td>Minimax-first</td>
-                <td>3</td>
-                <td>3</td>
-                <td>0.36s</td>
-            </tr>    
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>    
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>    
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>    
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>    
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>    
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>    
+            {%endfor%}
         </table>
     </div>
 </body>
